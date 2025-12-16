@@ -1,0 +1,111 @@
+package teamgen
+
+import (
+	"errors"
+	"math/rand"
+	"sort"
+	"time"
+
+	"github.com/sticktoss/backend/internal/models"
+)
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+// Team represents a generated team with players
+type Team struct {
+	Number      int             `json:"number"`
+	Players     []models.Player `json:"players"`
+	TotalWeight int             `json:"total_weight"`
+}
+
+// GenerateBalancedTeams creates balanced teams from a list of players
+// lockedPlayers is an array of player ID arrays - each inner array represents players that must be on the same team
+func GenerateBalancedTeams(players []models.Player, numTeams int, lockedPlayers [][]uint) ([]Team, error) {
+	if numTeams < 2 {
+		return nil, errors.New("must have at least 2 teams")
+	}
+
+	if len(players) < numTeams {
+		return nil, errors.New("not enough players for the requested number of teams")
+	}
+
+	// Initialize teams
+	teams := make([]Team, numTeams)
+	for i := range teams {
+		teams[i].Number = i + 1
+		teams[i].Players = []models.Player{}
+		teams[i].TotalWeight = 0
+	}
+
+	// Track which players have been assigned
+	assignedPlayers := make(map[uint]bool)
+
+	// First, handle locked players
+	if len(lockedPlayers) > 0 {
+		if len(lockedPlayers) > numTeams {
+			return nil, errors.New("cannot have more locked groups than teams")
+		}
+
+		// Create a map for quick player lookup
+		playerMap := make(map[uint]models.Player)
+		for _, p := range players {
+			playerMap[p.ID] = p
+		}
+
+		// Assign locked groups to teams
+		for i, lockedGroup := range lockedPlayers {
+			if i >= numTeams {
+				break
+			}
+
+			for _, playerID := range lockedGroup {
+				player, exists := playerMap[playerID]
+				if !exists {
+					return nil, errors.New("locked player not found in group")
+				}
+
+				teams[i].Players = append(teams[i].Players, player)
+				teams[i].TotalWeight += player.SkillWeight
+				assignedPlayers[playerID] = true
+			}
+		}
+	}
+
+	// Collect remaining players
+	remainingPlayers := []models.Player{}
+	for _, p := range players {
+		if !assignedPlayers[p.ID] {
+			remainingPlayers = append(remainingPlayers, p)
+		}
+	}
+
+	// Shuffle remaining players for randomness
+	rand.Shuffle(len(remainingPlayers), func(i, j int) {
+		remainingPlayers[i], remainingPlayers[j] = remainingPlayers[j], remainingPlayers[i]
+	})
+
+	// Sort remaining players by skill weight (descending) for better balance
+	sort.Slice(remainingPlayers, func(i, j int) bool {
+		return remainingPlayers[i].SkillWeight > remainingPlayers[j].SkillWeight
+	})
+
+	// Assign remaining players using greedy algorithm (assign to team with lowest total weight)
+	for _, player := range remainingPlayers {
+		// Find team with lowest total weight
+		minTeamIdx := 0
+		minWeight := teams[0].TotalWeight
+		for i := 1; i < numTeams; i++ {
+			if teams[i].TotalWeight < minWeight {
+				minWeight = teams[i].TotalWeight
+				minTeamIdx = i
+			}
+		}
+
+		teams[minTeamIdx].Players = append(teams[minTeamIdx].Players, player)
+		teams[minTeamIdx].TotalWeight += player.SkillWeight
+	}
+
+	return teams, nil
+}

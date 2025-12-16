@@ -1,0 +1,43 @@
+services:
+  # PostgreSQL database for local development
+  postgres:
+    image: postgres:16-alpine
+    container_name: sticktoss-postgres
+    environment:
+      POSTGRES_USER: sticktoss
+      POSTGRES_PASSWORD: sticktoss_dev_password
+      POSTGRES_DB: sticktoss
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sticktoss"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Backend API server
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sticktoss-backend
+    ports:
+      - "8080:8080"
+    environment:
+      DB_DRIVER: postgres
+      DATABASE_URL: postgres://sticktoss:sticktoss_dev_password@postgres:5432/sticktoss?sslmode=disable
+      JWT_SECRET: dev-secret-change-in-production
+      GIN_MODE: debug
+      PORT: 8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # Volumes commented out - uncomment for development with local changes
+    # volumes:
+    #   - ./backend:/app/backend
+    #   - ./frontend/dist:/app/frontend/dist
+
+volumes:
+  postgres_data:

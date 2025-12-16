@@ -1,0 +1,37 @@
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# Environment files
+.env
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# Frontend
+node_modules/
+frontend/dist/
+frontend/.svelte-kit/
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
