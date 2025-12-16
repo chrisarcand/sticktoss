@@ -88,16 +88,7 @@ Access the app at `http://localhost:8080`
 
 ### Deploying to Miren
 
-1. **Create a `.env` file** (copy from `.env.example`)
-   ```bash
-   cp .env.example .env
-   # Edit .env with your production values
-   ```
-
-2. **Push to Miren** (assuming you have Miren CLI set up)
-   ```bash
-   miren deploy
-   ```
+TODO
 
 ## Configuration
 
@@ -163,4 +154,4 @@ MIT
 
 ## Contributing
 
-Pull requests welcome! This is a hobby project for making pickup hockey games more fun.
+Pull requests welcome! You're here, aren't ya?
