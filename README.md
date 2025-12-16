@@ -56,6 +56,8 @@ A weighted team randomizer for pickup pond hockey games. Because sometimes the t
 4. **Access the app**
    Open `http://localhost:5173` in your browser
 
+For detailed development workflows, testing, and advanced topics, see **[DEVELOPMENT.md](DEVELOPMENT.md)**.
+
 ### Using Docker Compose
 
 The easiest way to run the full stack locally:
