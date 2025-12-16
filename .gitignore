@@ -25,6 +25,7 @@ frontend/.svelte-kit/
 # IDE
 .vscode/
 .idea/
+.claude/
 *.swp
 *.swo
 *~
