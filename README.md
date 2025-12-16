@@ -23,74 +23,30 @@ A weighted team randomizer for pickup pond hockey games. Because sometimes the t
 
 ## Quick Start
 
-### Prerequisites
+### Run with Docker Compose (Recommended)
 
-- Go 1.21+ (for local development)
-- Node.js 20+ (for frontend development)
-- Docker & Docker Compose (for containerized deployment)
-
-### Local Development
-
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd sticktoss
-   ```
-
-2. **Set up the backend**
-   ```bash
-   cd backend
-   go mod download
-   go run cmd/server/main.go
-   ```
-   The backend will start on `http://localhost:8080` with SQLite by default.
-
-3. **Set up the frontend** (in a new terminal)
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
-   The frontend dev server will start on `http://localhost:5173`
-
-4. **Access the app**
-   Open `http://localhost:5173` in your browser
-
-For detailed development workflows, testing, and advanced topics, see **[DEVELOPMENT.md](DEVELOPMENT.md)**.
-
-### Using Docker Compose
-
-The easiest way to run the full stack locally:
+The easiest way to get started:
 
 ```bash
 docker-compose up --build
 ```
 
-This will start:
-- PostgreSQL database on port 5432
-- Backend API + Frontend on port 8080
+Access the app at **http://localhost:8080**
 
-Access the app at `http://localhost:8080`
+This runs the full stack with PostgreSQL. To stop: `docker-compose down`
 
-### Building for Production
-
-1. **Build the Docker image**
-   ```bash
-   docker build -t sticktoss:latest .
-   ```
-
-2. **Run with environment variables**
-   ```bash
-   docker run -p 8080:8080 \
-     -e DB_DRIVER=postgres \
-     -e DATABASE_URL="postgres://user:pass@host:5432/dbname" \
-     -e JWT_SECRET="your-secret-key" \
-     sticktoss:latest
-   ```
-
-### Deploying to Miren
+### Deploy to Miren
 
 TODO
+
+### Local development and more..
+
+See **[DEVELOPMENT.md](DEVELOPMENT.md)** for:
+- Local development setup (Go + Node.js)
+- Building production images
+- Running tests
+- Detailed troubleshooting
+- API testing examples
 
 ## Configuration
 
