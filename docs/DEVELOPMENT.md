@@ -2,6 +2,31 @@
 
 This guide covers development workflows for Stick Toss.
 
+## Configuration
+
+### Environment Variables
+
+The app is configured via environment variables. See `.env.example` for a template.
+
+- `DB_DRIVER`: Database driver (`sqlite` or `postgres`)
+- `DATABASE_URL`: Database connection string
+  - SQLite: `sticktoss.db` (file path)
+  - PostgreSQL: `postgres://user:password@host:5432/dbname?sslmode=disable`
+- `JWT_SECRET`: Secret key for JWT tokens (MUST change in production!)
+- `PORT`: Server port (default: `8080`)
+- `GIN_MODE`: Gin mode (`debug` or `release`)
+
+**Example `.env` file:**
+```bash
+DB_DRIVER=sqlite
+DATABASE_URL=sticktoss.db
+JWT_SECRET=your-random-secret-key-change-this
+PORT=8080
+GIN_MODE=debug
+```
+
+For production, use strong random values for `JWT_SECRET` and set `GIN_MODE=release`.
+
 ## Prerequisites
 
 - **Go 1.21+**: Download from [golang.org](https://golang.org/dl/)

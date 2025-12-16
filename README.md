@@ -39,48 +39,17 @@ This runs the full stack with PostgreSQL. To stop: `docker-compose down`
 
 TODO
 
-### Local development and more..
+## Documentation
 
-See **[DEVELOPMENT.md](DEVELOPMENT.md)** for:
+**[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)** - Development guide:
+- Configuration and environment variables
 - Local development setup (Go + Node.js)
 - Building production images
 - Running tests
 - Detailed troubleshooting
 - API testing examples
 
-## Configuration
-
-Environment variables (see `.env.example`):
-
-- `DB_DRIVER`: Database driver (`sqlite` or `postgres`)
-- `DATABASE_URL`: Database connection string
-- `JWT_SECRET`: Secret key for JWT tokens (change in production!)
-- `PORT`: Server port (default: 8080)
-- `GIN_MODE`: Gin mode (`debug` or `release`)
-
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/signup` - Create account
-- `POST /api/auth/login` - Login
-- `GET /api/auth/me` - Get current user (protected)
-
-### Players
-- `GET /api/players` - List all players
-- `GET /api/players/:id` - Get player
-- `POST /api/players` - Create player
-- `PUT /api/players/:id` - Update player
-- `DELETE /api/players/:id` - Delete player
-
-### Groups
-- `GET /api/groups` - List all groups
-- `GET /api/groups/:id` - Get group with players
-- `POST /api/groups` - Create group
-- `PUT /api/groups/:id` - Update group
-- `DELETE /api/groups/:id` - Delete group
-- `POST /api/groups/:id/players` - Add player to group
-- `DELETE /api/groups/:id/players/:player_id` - Remove player from group
-- `POST /api/groups/:id/generate-teams` - Generate balanced teams
+**[docs/API.md](docs/API.md)** - Complete REST API reference
 
 ## Project Structure
 
@@ -101,6 +70,9 @@ sticktoss/
 │   │   ├── routes/          # Svelte pages
 │   │   └── App.svelte
 │   └── package.json
+├── docs/
+│   ├── DEVELOPMENT.md       # Development guide
+│   └── API.md               # API documentation
 ├── Dockerfile
 ├── docker-compose.yml
 └── README.md

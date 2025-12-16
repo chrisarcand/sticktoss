@@ -7,8 +7,9 @@ This document provides context for AI agents working on the Stick Toss codebase.
 **IMPORTANT**: When adding or changing features, you MUST update relevant documentation:
 
 - **AGENTS.md** (this file): Update architecture notes, add new gotchas, document design decisions
-- **README.md**: Update if adding new features, changing setup/deployment, or modifying API endpoints
-- **DEVELOPMENT.md**: Update if changing development workflow or adding new tools
+- **README.md**: Update if adding new features or changing quick start instructions
+- **docs/DEVELOPMENT.md**: Update if changing development workflow, configuration, or adding new tools
+- **docs/API.md**: Update if adding/changing API endpoints
 
 Don't leave documentation stale. Future work depends on accurate docs.
 
