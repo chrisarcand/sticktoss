@@ -26,7 +26,10 @@
 
 <div class="container">
   <div class="card">
-    <h1>Stick Toss</h1>
+    <div class="logo-container">
+      <img src="/logo.png" alt="Stick Toss Logo" class="logo" />
+      <h1>Stick Toss</h1>
+    </div>
     <h2>Login</h2>
 
     <form on:submit|preventDefault={handleSubmit}>
@@ -85,8 +88,21 @@
     max-width: 400px;
   }
 
+  .logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .logo {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
+  }
+
   h1 {
-    margin: 0 0 10px 0;
+    margin: 0;
     font-size: 32px;
     color: #333;
     text-align: center;

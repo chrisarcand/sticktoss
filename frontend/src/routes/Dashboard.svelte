@@ -112,7 +112,10 @@
 
 <div class="container">
   <header>
-    <h1>Stick Toss</h1>
+    <div class="header-left">
+      <img src="/logo.png" alt="Stick Toss Logo" class="logo" />
+      <h1>Stick Toss</h1>
+    </div>
     <button class="logout-btn" on:click={logout}>Logout</button>
   </header>
 
@@ -164,6 +167,12 @@
         {/if}
       </section>
     </div>
+
+    <footer class="footer">
+      <a href="https://github.com/chrisarcand/sticktoss" target="_blank" rel="noopener noreferrer">
+        <img src="https://img.shields.io/badge/GitHub-Open%20Source-blue?logo=github" alt="GitHub Repository" />
+      </a>
+    </footer>
   {/if}
 </div>
 
@@ -263,6 +272,17 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 40px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .logo {
+    height: 50px;
+    width: auto;
   }
 
   h1 {
@@ -522,6 +542,26 @@
 
   .modal-actions button:hover {
     opacity: 0.9;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 30px 0 10px 0;
+    margin-top: 40px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .footer a {
+    display: inline-block;
+    transition: opacity 0.2s;
+  }
+
+  .footer a:hover {
+    opacity: 0.8;
+  }
+
+  .footer img {
+    height: 20px;
   }
 
   @media (max-width: 768px) {
