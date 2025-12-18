@@ -186,14 +186,61 @@ export const groupsAPI = {
     return response.json();
   },
 
-  async generateTeams(groupId, numTeams, lockedPlayers = []) {
+  async generateTeams(groupId, numTeams, lockedPlayers = [], separatedPlayers = [], useJerseyColors = false) {
     const response = await fetchWithAuth(`${API_BASE}/groups/${groupId}/generate-teams`, {
       method: 'POST',
-      body: JSON.stringify({ num_teams: numTeams, locked_players: lockedPlayers }),
+      body: JSON.stringify({
+        num_teams: numTeams,
+        locked_players: lockedPlayers,
+        separated_players: separatedPlayers,
+        use_jersey_colors: useJerseyColors
+      }),
     });
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.error || 'Failed to generate teams');
+    }
+    return response.json();
+  },
+
+  async uploadLogo(groupId, file) {
+    const token = getAuthToken();
+    const formData = new FormData();
+    formData.append('logo', file);
+
+    const response = await fetch(`${API_BASE}/groups/${groupId}/logo`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to upload logo');
+    }
+    return response.json();
+  },
+
+  async deleteLogo(groupId) {
+    const response = await fetchWithAuth(`${API_BASE}/groups/${groupId}/logo`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to delete logo');
+    }
+    return response.json();
+  },
+};
+
+// Game API (public, no auth)
+export const gameAPI = {
+  async get(shareId) {
+    const response = await fetch(`${API_BASE}/game/${shareId}`);
+    if (!response.ok) {
+      throw new Error('Game not found');
     }
     return response.json();
   },

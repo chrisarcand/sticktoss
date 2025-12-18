@@ -33,11 +33,13 @@ type Player struct {
 
 // Group represents a collection of players
 type Group struct {
-	ID        uint      `gorm:"primaryKey" json:"id"`
-	UserID    uint      `gorm:"not null;index" json:"user_id"`
-	Name      string    `gorm:"not null" json:"name"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID              uint      `gorm:"primaryKey" json:"id"`
+	UserID          uint      `gorm:"not null;index" json:"user_id"`
+	Name            string    `gorm:"not null" json:"name"`
+	Logo            []byte    `gorm:"type:bytea" json:"-"` // Logo image data (optional)
+	LogoContentType string    `gorm:"size:50" json:"logo_content_type,omitempty"` // e.g., "image/png"
+	CreatedAt       time.Time `json:"created_at"`
+	UpdatedAt       time.Time `json:"updated_at"`
 
 	User    User     `gorm:"foreignKey:UserID" json:"-"`
 	Players []Player `gorm:"many2many:group_players;" json:"players,omitempty"`
@@ -51,5 +53,5 @@ type GroupPlayer struct {
 
 // Migrate runs database migrations
 func Migrate(db *gorm.DB) error {
-	return db.AutoMigrate(&User{}, &Player{}, &Group{}, &GroupPlayer{})
+	return db.AutoMigrate(&User{}, &Player{}, &Group{}, &GroupPlayer{}, &Game{})
 }

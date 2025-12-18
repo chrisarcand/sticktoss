@@ -122,34 +122,6 @@
     <div class="content">
       <section class="section">
         <div class="section-header">
-          <h2>Players</h2>
-          <button on:click={() => showNewPlayerModal = true}>+ Add Player</button>
-        </div>
-
-        {#if players.length === 0}
-          <p class="empty">No players yet. Create your first player!</p>
-        {:else}
-          <div class="grid">
-            {#each players as player}
-              <div class="card">
-                <div class="card-content">
-                  <h3>{player.name}</h3>
-                  <div class="weight-badge">
-                    Level {player.skill_weight} - {skillLevels[player.skill_weight].label}
-                  </div>
-                </div>
-                <div class="card-actions">
-                  <button class="btn-small" on:click={() => openEditPlayer(player)}>Edit</button>
-                  <button class="btn-small btn-danger" on:click={() => deletePlayer(player.id)}>Delete</button>
-                </div>
-              </div>
-            {/each}
-          </div>
-        {/if}
-      </section>
-
-      <section class="section">
-        <div class="section-header">
           <h2>Groups</h2>
           <button on:click={() => showNewGroupModal = true}>+ Add Group</button>
         </div>
@@ -168,6 +140,25 @@
                   <button class="btn-small btn-danger" on:click={() => deleteGroup(group.id)}>Delete</button>
                 </div>
               </div>
+            {/each}
+          </div>
+        {/if}
+      </section>
+
+      <section class="section players-section">
+        <div class="section-header">
+          <h2>Players</h2>
+          <button on:click={() => showNewPlayerModal = true}>+ Add Player</button>
+        </div>
+
+        {#if players.length === 0}
+          <p class="empty">No players yet. Create your first player!</p>
+        {:else}
+          <div class="player-list">
+            {#each players as player}
+              <button class="player-item" on:click={() => openEditPlayer(player)}>
+                {player.name}
+              </button>
             {/each}
           </div>
         {/if}
@@ -230,8 +221,11 @@
           <p class="skill-description">{skillLevels[editingPlayer.skill_weight].description}</p>
         </div>
         <div class="modal-actions">
-          <button type="button" on:click={() => showEditPlayerModal = false}>Cancel</button>
-          <button type="submit">Update</button>
+          <button type="button" class="btn-delete" on:click={() => { showEditPlayerModal = false; deletePlayer(editingPlayer.id); }}>Delete</button>
+          <div class="modal-actions-right">
+            <button type="button" on:click={() => showEditPlayerModal = false}>Cancel</button>
+            <button type="submit">Update</button>
+          </div>
         </div>
       </form>
     </div>
@@ -461,8 +455,14 @@
   .modal-actions {
     display: flex;
     gap: 10px;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 20px;
+  }
+
+  .modal-actions-right {
+    display: flex;
+    gap: 10px;
   }
 
   .modal-actions button {
@@ -471,6 +471,43 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
+  }
+
+  .btn-delete {
+    background-color: #f44336 !important;
+    color: white !important;
+  }
+
+  .btn-delete:hover {
+    background-color: #da190b !important;
+  }
+
+  .player-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .player-item {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 8px 16px;
+    color: #2196F3;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+
+  .player-item:hover {
+    background-color: #f5f5f5;
+    border-color: #2196F3;
+  }
+
+  .players-section {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid #e0e0e0;
   }
 
   .modal-actions button[type="button"] {

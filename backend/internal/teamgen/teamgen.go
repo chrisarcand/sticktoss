@@ -22,7 +22,8 @@ type Team struct {
 
 // GenerateBalancedTeams creates balanced teams from a list of players
 // lockedPlayers is an array of player ID arrays - each inner array represents players that must be on the same team
-func GenerateBalancedTeams(players []models.Player, numTeams int, lockedPlayers [][]uint) ([]Team, error) {
+// separatedPlayers is an array of player ID arrays - each inner array represents players that must be on different teams
+func GenerateBalancedTeams(players []models.Player, numTeams int, lockedPlayers [][]uint, separatedPlayers [][]uint) ([]Team, error) {
 	if numTeams < 2 {
 		return nil, errors.New("must have at least 2 teams")
 	}
@@ -73,6 +74,51 @@ func GenerateBalancedTeams(players []models.Player, numTeams int, lockedPlayers 
 		}
 	}
 
+	// Handle separated players (must be on different teams)
+	if len(separatedPlayers) > 0 {
+		// Create a map for quick player lookup
+		playerMap := make(map[uint]models.Player)
+		for _, p := range players {
+			playerMap[p.ID] = p
+		}
+
+		for _, separatedGroup := range separatedPlayers {
+			// Validate: can't separate more players than we have teams
+			if len(separatedGroup) > numTeams {
+				return nil, errors.New("cannot separate more players than the number of teams")
+			}
+
+			// Check for conflicts with locked players
+			for _, playerID := range separatedGroup {
+				if assignedPlayers[playerID] {
+					return nil, errors.New("cannot separate a player that is already locked to a team")
+				}
+			}
+
+			// Assign each player in the separated group to a different team
+			// Randomly shuffle which teams they go to for fairness
+			teamIndices := make([]int, numTeams)
+			for i := range teamIndices {
+				teamIndices[i] = i
+			}
+			rand.Shuffle(len(teamIndices), func(i, j int) {
+				teamIndices[i], teamIndices[j] = teamIndices[j], teamIndices[i]
+			})
+
+			for i, playerID := range separatedGroup {
+				player, exists := playerMap[playerID]
+				if !exists {
+					return nil, errors.New("separated player not found in group")
+				}
+
+				teamIdx := teamIndices[i]
+				teams[teamIdx].Players = append(teams[teamIdx].Players, player)
+				teams[teamIdx].TotalWeight += player.SkillWeight
+				assignedPlayers[playerID] = true
+			}
+		}
+	}
+
 	// Collect remaining players
 	remainingPlayers := []models.Player{}
 	for _, p := range players {
@@ -93,15 +139,24 @@ func GenerateBalancedTeams(players []models.Player, numTeams int, lockedPlayers 
 
 	// Assign remaining players using greedy algorithm (assign to team with lowest total weight)
 	for _, player := range remainingPlayers {
-		// Find team with lowest total weight
-		minTeamIdx := 0
+		// Find all teams with minimum total weight
 		minWeight := teams[0].TotalWeight
 		for i := 1; i < numTeams; i++ {
 			if teams[i].TotalWeight < minWeight {
 				minWeight = teams[i].TotalWeight
-				minTeamIdx = i
 			}
 		}
+
+		// Collect all teams that have the minimum weight
+		minTeams := []int{}
+		for i := 0; i < numTeams; i++ {
+			if teams[i].TotalWeight == minWeight {
+				minTeams = append(minTeams, i)
+			}
+		}
+
+		// Randomly pick one of the teams with minimum weight
+		minTeamIdx := minTeams[rand.Intn(len(minTeams))]
 
 		teams[minTeamIdx].Players = append(teams[minTeamIdx].Players, player)
 		teams[minTeamIdx].TotalWeight += player.SkillWeight

@@ -4,11 +4,14 @@
   import Signup from './routes/Signup.svelte';
   import Dashboard from './routes/Dashboard.svelte';
   import Group from './routes/Group.svelte';
+  import Teams from './routes/Teams.svelte';
 </script>
 
 <Router>
   <Route path="/login" component={Login} />
   <Route path="/signup" component={Signup} />
+  <Route path="/game/:shareId" component={Teams} />
+  <Route path="/group/:id/teams" component={Teams} />
   <Route path="/group/:id" component={Group} />
   <Route path="/" component={Dashboard} />
 </Router>

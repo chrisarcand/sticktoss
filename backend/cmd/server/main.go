@@ -54,6 +54,9 @@ func main() {
 	// Public routes
 	r.POST("/api/auth/signup", authHandler.Signup)
 	r.POST("/api/auth/login", authHandler.Login)
+	r.GET("/api/game/:shareId", groupHandler.GetGame)
+	r.GET("/api/groups/:id/logo", groupHandler.GetGroupLogo)
+	r.GET("/api/game/:shareId/logo", groupHandler.GetGameLogo)
 
 	// Protected routes
 	protected := r.Group("/api")
@@ -79,6 +82,10 @@ func main() {
 		// Group-Player routes
 		protected.POST("/groups/:id/players", groupHandler.AddPlayerToGroup)
 		protected.DELETE("/groups/:id/players/:player_id", groupHandler.RemovePlayerFromGroup)
+
+		// Group logo routes
+		protected.POST("/groups/:id/logo", groupHandler.UploadGroupLogo)
+		protected.DELETE("/groups/:id/logo", groupHandler.DeleteGroupLogo)
 
 		// Team generation
 		protected.POST("/groups/:id/generate-teams", groupHandler.GenerateTeams)
